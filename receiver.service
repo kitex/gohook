@@ -1,0 +1,13 @@
+[Unit]
+Description=alert receiver
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network-online.target
+
+[Service]
+User=prometheus
+Restart=on-failure
+
+ExecStart= /usr/bin/receiver -path=/hdfs/alarms
+
+[Install]
+WantedBy=multi-user.target
