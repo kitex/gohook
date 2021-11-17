@@ -146,7 +146,7 @@ func main() {
 
 		csvString := b.String()
 
-		log.Println(csvString)
+		//log.Println(csvString)
 
 		//log.Println(fms.Node)
 		nms.Alerts = data.Alerts
