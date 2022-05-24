@@ -118,7 +118,13 @@ func main() {
 		//fmt.Println("path:", filePath)
 		fms.Identifier = data.Status
 
-		fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"]
+		device_interface, ok := data.Alerts[0].Annotations["interface"]
+
+		if !ok {
+			device_interface = ""
+		}
+
+		fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"] + device_interface
 		fms.Node = data.Alerts[0].Labels["hostname"] + "-" + data.Alerts[0].Labels["instance"] + "-" + data.Alerts[0].Labels["function"]
 		fms.AlarmName = data.Alerts[0].Labels["alertname"]
 		fms.AlertGroup = data.Alerts[0].Labels["alertgroup"]
@@ -164,7 +170,7 @@ func main() {
 			log.Println(nms_json)
 		*/
 
-		_ = ioutil.WriteFile(filePath, []byte(csvString), 0644)
+		_ = ioutil.WriteFile(filePath+".csv", []byte(csvString), 0644)
 		/*
 			file, err := os.OpenFile(strconv.FormatInt(time.Now().UnixNano(), 10), os.O_APPEND|os.O_WRONLY, 0644)
 			if err != nil {
