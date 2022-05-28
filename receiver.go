@@ -74,6 +74,7 @@ type (
 )
 
 func main() {
+
 	app := fiber.New()
 	prometheus := fiberprometheus.New("webhook-receiver-service")
 	prometheus.RegisterAt(app, "/metrics")
@@ -118,14 +119,28 @@ func main() {
 		//fmt.Println("path:", filePath)
 		fms.Identifier = data.Status
 
-		fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"]
+		device_interface, ok := data.Alerts[0].Labels["ifName"]
+		if ok {
+			fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"] + device_interface
+		} else {
+			fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"]
+		}
 		fms.Node = data.Alerts[0].Labels["hostname"] + "-" + data.Alerts[0].Labels["instance"] + "-" + data.Alerts[0].Labels["function"]
 		fms.AlarmName = data.Alerts[0].Labels["alertname"]
 		fms.AlertGroup = data.Alerts[0].Labels["alertgroup"]
 		fms.Summary = data.Alerts[0].Annotations["summary"]
 		fms.Suggestion = data.Alerts[0].Annotations["suggestion"]
 		fms.AlertKey = data.Alerts[0].Labels["function"]
+
 		fms.Type = data.Status
+		dType := "1"
+		if fms.Type == "firing" {
+			dType = "1"
+		} else if fms.Type == "pending" {
+			dType = "1"
+		} else {
+			dType = "2"
+		}
 		fms.Severity = data.Alerts[0].Labels["severity"]
 		fms.Domain = data.Alerts[0].Labels["job"]
 		fms.Manager = data.Alerts[0].Labels["devicetype"]
@@ -133,7 +148,7 @@ func main() {
 
 		pairs := [][]string{}
 		pairs = append(pairs, []string{"identifier", "node", "alarmname", "alertgroup", "summary", "suggestion", "alertKey", "type", "severity", "domain", "manager", "alarmPriority"})
-		pairs = append(pairs, []string{fms.Identifier, fms.Node, fms.AlarmName, fms.AlertGroup, fms.Summary, fms.Suggestion, fms.AlertKey, fms.Type, fms.Severity, fms.Domain, fms.Manager, fms.AlarmPriority})
+		pairs = append(pairs, []string{fms.Identifier, fms.Node, fms.AlarmName, fms.AlertGroup, fms.Summary, fms.Suggestion, fms.AlertKey, dType, fms.Severity, fms.Domain, fms.Manager, fms.AlarmPriority})
 
 		b := new(bytes.Buffer)
 		w := csv.NewWriter(b)
@@ -164,7 +179,7 @@ func main() {
 			log.Println(nms_json)
 		*/
 
-		_ = ioutil.WriteFile(filePath, []byte(csvString), 0644)
+		_ = ioutil.WriteFile(filePath+".csv", []byte(csvString), 0644)
 		/*
 			file, err := os.OpenFile(strconv.FormatInt(time.Now().UnixNano(), 10), os.O_APPEND|os.O_WRONLY, 0644)
 			if err != nil {
