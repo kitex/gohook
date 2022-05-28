@@ -119,22 +119,12 @@ func main() {
 		//fmt.Println("path:", filePath)
 		fms.Identifier = data.Status
 
-<<<<<<< HEAD
 		device_interface, ok := data.Alerts[0].Labels["ifName"]
 		if ok {
 			fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"] + device_interface
 		} else {
 			fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"]
 		}
-=======
-		device_interface, ok := data.Alerts[0].Annotations["interface"]
-
-		if !ok {
-			device_interface = ""
-		}
-
-		fms.Identifier = data.Alerts[0].Labels["alertname"] + data.Alerts[0].Labels["function"] + data.Alerts[0].Labels["hostname"] + data.Alerts[0].Labels["type"] + device_interface
->>>>>>> 3b09a547bec6ae019d35d1e8d7cf3ee4d256baad
 		fms.Node = data.Alerts[0].Labels["hostname"] + "-" + data.Alerts[0].Labels["instance"] + "-" + data.Alerts[0].Labels["function"]
 		fms.AlarmName = data.Alerts[0].Labels["alertname"]
 		fms.AlertGroup = data.Alerts[0].Labels["alertgroup"]
