@@ -2,8 +2,8 @@
 
 ## Put receiver.service in /etc/systemd/system/
 
-run
-<br\>
+run\
+
  reload daemon : *systemctl daemon-reload*
  <br\>
  Check status of receiver: *systemctl status receiver*
