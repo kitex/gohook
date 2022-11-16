@@ -2,14 +2,14 @@
 
 ## Put receiver.service in /etc/systemd/system/
 
-run\
-
+run
+<br />
  reload daemon : *systemctl daemon-reload*
- <br\>
+<br />
  Check status of receiver: *systemctl status receiver*
- <br\>
+<br />
  Start receiver:           *systemctl start receiver*
- <br\>
+<br />
  Stop receiver:           *systemctl stop receiver*
- <br\>
+<br />
  Enable receiver:           *systemctl enable receiver*
